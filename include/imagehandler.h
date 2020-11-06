@@ -7,7 +7,7 @@
 namespace image_viewer_np {
     /*Image manager interface implementation. Created as template to not bind with real image class, 
     only with interface*/
-    template<typename T>
+    template<typename T, typename = std::enable_if<std::is_base_of<IImage,T>::value>>
     class ImageHandler : public IImageHandler {
     public:
         bool ImageHandler::load(const std::string& file_name, const std::string& key) override{
@@ -15,7 +15,7 @@ namespace image_viewer_np {
                 auto new_img = std::make_unique<T>(file_name);
                 images_[key] = std::move(new_img);
             }
-            catch (...) {
+            catch (std::runtime_error&) {
                 return false;
             }
             return true;

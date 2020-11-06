@@ -23,7 +23,11 @@ const std::unordered_map<App::COMMAND_TYPE, std::string> ERRORS{ {App::COMMAND_T
                                                                  {App::COMMAND_TYPE::RESIZE, "Resize failed"},
                                                                  {App::COMMAND_TYPE::UNDEFINED, "Unknown command"},
                                                                };
-const std::string HELP_STR = "ld, load filename key  - load image \n st,store key filename - store image\n blur src dst size - blur image \n resize src dst width height - resize image \n q, quit - close";
+const std::string HELP_STR = "ld, load filename key  - load image \n" 
+                             "st,store key filename - store image\n" 
+                             "blur src dst size - blur image \n"
+                             "resize src dst width height - resize image \n" 
+                             "q, quit - close";
 int main(){
     try {
         auto handler = std::unique_ptr<IImageHandler>(new ImageHandler<Image>());
@@ -33,7 +37,8 @@ int main(){
     catch (std::bad_alloc& e) {
         std::cout << e.what() << std::endl;
     }
-    catch (...) {
+    catch (std::runtime_error& e) {
+        std::cout << e.what() << std::endl;
     }
     return 0;
 }

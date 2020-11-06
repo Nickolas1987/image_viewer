@@ -12,7 +12,7 @@ namespace image_viewer_np{
                                                                                                             errors_(errors),
                                                                                                             help_str_(help_str) {
         if (!img_handler_) {
-            throw std::runtime_error("");
+            throw std::runtime_error("bad handler");
         }
         commands_[COMMAND_TYPE::LOAD] = [this] (){
             std::string file_name;
@@ -35,21 +35,21 @@ namespace image_viewer_np{
         commands_[COMMAND_TYPE::BLUR] = [this]() {
             std::string key_src;
             std::string key_dst;
-            int size;
+            int size{};
             std::cin >> key_src >> key_dst >> size;
-
-            if (!img_handler_->blur(key_src, key_dst, size)) {
+ 
+            if (size <=0 || !img_handler_->blur(key_src, key_dst, size)) {
                 std::cout << errors_[COMMAND_TYPE::BLUR] << std::endl;
             }
         };
         commands_[COMMAND_TYPE::RESIZE] = [this]() {
             std::string key_src;
             std::string key_dst;
-            int width;
-            int height;
+            int width{};
+            int height{};
             std::cin >> key_src >> key_dst >> width >> height;
 
-            if (!img_handler_->resize(key_src, key_dst, width, height)) {
+            if (width <= 0 || height <=0 || !img_handler_->resize(key_src, key_dst, width, height)) {
                 std::cout << errors_[COMMAND_TYPE::RESIZE] << std::endl;
             }
         };
@@ -72,7 +72,7 @@ namespace image_viewer_np{
     App::COMMAND_TYPE App::getCommandType() {
         std::string command;
         std::cin >> command;
-        if (command_names_.find(command) == command_names_.end()) {
+        if (!command_names_.contains(command)) {
             return COMMAND_TYPE::UNDEFINED;
         }
         return command_names_.at(command);
@@ -92,6 +92,7 @@ namespace image_viewer_np{
             else {
                 std::cout << errors_[type] << std::endl;
             }
+            cin.clear();
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
