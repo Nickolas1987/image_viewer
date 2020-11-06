@@ -1,0 +1,46 @@
+﻿#pragma once
+#include <string>
+#include <unordered_map>
+#include <memory>
+#include "iimagehandler.h"
+#include "iimage.h"
+namespace image_viewer_np {
+    /*Image manager interface implementation. Created as template to not bind with real image class, 
+    only with interface*/
+    template<typename T>
+    class ImageHandler : public IImageHandler {
+    public:
+        bool ImageHandler::load(const std::string& file_name, const std::string& key) override{
+            try {
+                auto new_img = std::make_unique<T>(file_name);
+                images_[key] = std::move(new_img);
+            }
+            catch (std::runtime_error&) {
+                return false;
+            }
+            return true;
+        }
+        bool ImageHandler::store(const std::string& key, const std::string& file_name) override{
+            if (!images_.contains(key)) {
+                return false;
+            }
+            return images_.at(key)->save(file_name);
+        }
+        bool ImageHandler::blur(const std::string& key_src, const std::string& key_dst, int size) override{
+            if (!images_.contains(key_src)) {
+                return false;
+            }
+            images_[key_dst] = images_.at(key_src)->clone();
+            return images_.at(key_dst)->blur(size);
+        }
+        bool ImageHandler::resize(const std::string& key_src, const std::string& key_dst, int width, int height) override{
+            if (!images_.contains(key_src)) {
+                return false;
+            }
+            images_[key_dst] = images_.at(key_src)->clone();
+            return images_.at(key_dst)->resize(width, height);
+        }
+    private:
+        std::unordered_map<std::string, std::unique_ptr<IImage>> images_;
+    };
+}
