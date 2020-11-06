@@ -1,1 +1,1 @@
-# image_viewer
+# image_viewer - simple image viewer using OpenCV library
