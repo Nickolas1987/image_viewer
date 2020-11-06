@@ -15,7 +15,7 @@ namespace image_viewer_np {
                 auto new_img = std::make_unique<T>(file_name);
                 images_[key] = std::move(new_img);
             }
-            catch (std::runtime_error&) {
+            catch (...) {
                 return false;
             }
             return true;
