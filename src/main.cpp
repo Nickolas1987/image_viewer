@@ -2,7 +2,6 @@
 #include "imagehandler.h"
 #include "image.h"
 
-using namespace std;
 using namespace image_viewer_np;
 /*Strings for interface*/
 const std::unordered_map<std::string, App::COMMAND_TYPE> COMMAND_NAMES{ {"load", App::COMMAND_TYPE::LOAD},

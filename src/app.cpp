@@ -4,7 +4,6 @@
 #include "app.h"
 #include <stdexcept>
 
-using namespace std;
 namespace image_viewer_np{
     App::App(std::unique_ptr<IImageHandler>&& h, const CommandNames& commands, const CommandErrors& errors, const std::string& help_str):img_handler_(std::forward<std::unique_ptr<IImageHandler>>(h)),
                                                                                                             is_run(false), 
@@ -92,8 +91,8 @@ namespace image_viewer_np{
             else {
                 std::cout << errors_[type] << std::endl;
             }
-            cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
 }
