@@ -12,8 +12,7 @@ namespace image_viewer_np {
     public:
         bool ImageHandler::load(const std::string& file_name, const std::string& key) override{
             try {
-                auto new_img = std::make_unique<T>(file_name);
-                images_[key] = std::move(new_img);
+                images_[key] = std::move(std::make_unique<T>(file_name));
             }
             catch (std::runtime_error&) {
                 return false;
@@ -30,14 +29,18 @@ namespace image_viewer_np {
             if (!images_.contains(key_src)) {
                 return false;
             }
-            images_[key_dst] = images_.at(key_src)->clone();
+            if (key_src != key_dst) {
+                images_[key_dst] = images_.at(key_src)->clone();
+            }
             return images_.at(key_dst)->blur(size);
         }
         bool ImageHandler::resize(const std::string& key_src, const std::string& key_dst, int width, int height) override{
             if (!images_.contains(key_src)) {
                 return false;
             }
-            images_[key_dst] = images_.at(key_src)->clone();
+            if (key_src != key_dst) {
+                images_[key_dst] = images_.at(key_src)->clone();
+            }
             return images_.at(key_dst)->resize(width, height);
         }
     private:
